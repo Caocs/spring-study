@@ -5,6 +5,7 @@ mvnw
 mvnw.cmd
 **/src/main/**/target/
 **/src/test/**/target/
+.jar
 
 ### STS ###
 .apt_generated
