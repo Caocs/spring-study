@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--引入外部属性文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"></context:property-placeholder>
+
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.prop.driver}"></property>
+        <property name="url" value="${jdbc.prop.url}"></property>
+        <property name="username" value="${jdbc.prop.username}"></property>
+        <property name="password" value="${jdbc.prop.password}"></property>
+    </bean>
+
+    <!--创建事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="druidDataSource"></property>
+    </bean>
+
+    <!--配置事务通知-->
+    <tx:advice id="txAdvice">
+        <tx:attributes>
+            <!--执行马忠规则的方法上面添加事务-->
+            <tx:method name="accountMoney" isolation="REPEATABLE_READ"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--通过aop配置事务的切入点和切面-->
+    <aop:config>
+        <aop:pointcut id="pt" expression="execution(* com.java.ccs.spring5.example.demo.jdbc.service.UserService.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pt"></aop:advisor>
+    </aop:config>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="druidDataSource"></property>
+    </bean>
+
+    <bean id="userDao" class="com.java.ccs.spring5.example.demo.jdbc.dao.UserDaoImpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"></property>
+    </bean>
+
+    <bean id="userService" class="com.java.ccs.spring5.example.demo.jdbc.service.UserService">
+        <property name="userDao" ref="userDao"></property>
+    </bean>
+
+</beans>

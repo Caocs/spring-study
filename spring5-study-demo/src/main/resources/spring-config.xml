@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="user" class="com.java.ccs.spring5.example.demo.bean.User"></bean>
+
+    <bean id="order" class="com.java.ccs.spring5.example.demo.bean.Order">
+        <constructor-arg name="name" value="东西"></constructor-arg>
+        <constructor-arg name="address" value="家"></constructor-arg>
+    </bean>
+
+    <bean id="book" class="com.java.ccs.spring5.example.demo.bean.Book">
+        <!-- null 值-->
+        <property name="name">
+            <null></null>
+        </property>
+        <!-- 特殊符号 -->
+        <property name="address">
+            <value><![CDATA[<<南京>>]]></value>
+        </property>
+    </bean>
+
+    <bean id="student" class="com.java.ccs.spring5.example.demo.bean.Student">
+        <property name="names">
+            <array>
+                <value>student</value>
+            </array>
+        </property>
+        <property name="list">
+            <list>
+                <value>list1</value>
+            </list>
+        </property>
+        <property name="map">
+            <map>
+                <entry key="java-k" value="java-v"></entry>
+            </map>
+        </property>
+        <property name="set">
+            <set>
+                <value>mysql</value>
+            </set>
+        </property>
+        <property name="userList">
+            <list>
+                <ref bean="user"></ref>
+            </list>
+        </property>
+    </bean>
+
+</beans>
